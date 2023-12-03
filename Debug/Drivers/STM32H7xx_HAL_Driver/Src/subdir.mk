@@ -27,29 +27,6 @@ C_SRCS += \
 ../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c \
 ../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c 
 
-C_DEPS += \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma_ex.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash_ex.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hsem.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd_ex.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.d \
-./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.d 
-
 OBJS += \
 ./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.o \
 ./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.o \
@@ -73,10 +50,33 @@ OBJS += \
 ./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.o \
 ./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.o 
 
+C_DEPS += \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma_ex.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash_ex.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hsem.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd_ex.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.d \
+./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.d 
+
 
 # Each subdirectory must supply rules for building sources it contributes
 Drivers/STM32H7xx_HAL_Driver/Src/%.o Drivers/STM32H7xx_HAL_Driver/Src/%.su Drivers/STM32H7xx_HAL_Driver/Src/%.cyclo: ../Drivers/STM32H7xx_HAL_Driver/Src/%.c Drivers/STM32H7xx_HAL_Driver/Src/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32H743xx -c -I../Core/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=standard_c_nano_cpp.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "$@"
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32H743xx -c -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Core/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "$@"
 
 clean: clean-Drivers-2f-STM32H7xx_HAL_Driver-2f-Src
 
