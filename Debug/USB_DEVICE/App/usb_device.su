@@ -1,3 +1,3 @@
-../USB_DEVICE/App/usb_device.c:59:10:CDC_OTG_Send	32	static
-../USB_DEVICE/App/usb_device.c:89:10:CDC_OTG_Recv	16	static
-../USB_DEVICE/App/usb_device.c:102:6:MX_USB_DEVICE_Init	8	static
+../USB_DEVICE/App/usb_device.c:61:10:CDC_OTG_Send	32	static
+../USB_DEVICE/App/usb_device.c:91:10:CDC_OTG_Recv	16	static
+../USB_DEVICE/App/usb_device.c:104:6:MX_USB_DEVICE_Init	8	static

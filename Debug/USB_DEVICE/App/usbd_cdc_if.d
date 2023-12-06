@@ -27,16 +27,16 @@ USB_DEVICE/App/usbd_cdc_if.o: ../USB_DEVICE/App/usbd_cdc_if.c \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_cortex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_flash.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_flash_ex.h \
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hrtim.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hsem.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h \
- ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h \
- ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
+ ../Core/Inc/dshot600.h ../Core/Inc/logger.h ../Core/Inc/main.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
@@ -69,16 +69,18 @@ USB_DEVICE/App/usbd_cdc_if.o: ../USB_DEVICE/App/usbd_cdc_if.c \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_cortex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_flash.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_flash_ex.h:
+../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hrtim.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hsem.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h:
-../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h:
-../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
+../Core/Inc/dshot600.h:
+../Core/Inc/logger.h:
+../Core/Inc/main.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h:

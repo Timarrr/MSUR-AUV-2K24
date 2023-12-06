@@ -43,7 +43,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-TIM_HandleTypeDef htim16;
+HRTIM_HandleTypeDef hhrtim;
 
 /* USER CODE BEGIN PV */
 
@@ -57,13 +57,14 @@ uint8_t CDCRxBufferFS[FS_RX_DATA_SIZE];
 /** Data to send over USB CDC are stored in this buffer   */
 uint8_t CDCTxBufferFS[FS_TX_DATA_SIZE];
 
-uint16_t TimAInterrupts;
+uint32_t TimMRollovers;
 
-uint16_t TimBInterrupts;
+uint32_t TimMBit1s;
 
-uint16_t TimMInterrupts;
+uint32_t TimMBit0s;
 
-uint16_t Tim16Interrupts;
+uint32_t Tim16Interrupts;
+
 
 uint8_t UserInputBuffer[FS_RX_DATA_SIZE/2];
 int bufferLen;
@@ -72,7 +73,7 @@ int bufferLen;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_TIM16_Init(void);
+static void MX_HRTIM_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -112,32 +113,29 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  /* Use the PLLx2 clock for HRTIM */
-
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
-  MX_TIM16_Init();
+  MX_HRTIM_Init();
   /* USER CODE BEGIN 2 */
 
-  // Timer for usec counting
+  HAL_HRTIM_SimpleBaseStart_IT(&hhrtim, HRTIM_TIMERINDEX_MASTER);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   uint32_t oldtick = HAL_GetTick();
-  uint32_t newtick = HAL_GetTick();
-  int thing1 = 0;
+  uint32_t newtick = oldtick;
   while (1)
   {
-	  memset(CDCRxBufferFS, '\0', 2048);
+	  memset(CDCRxBufferFS, '\0', strlen(CDCRxBufferFS));
 
 	  CDC_OTG_Recv(CDCRxBufferFS);
 	  if(strlen(CDCRxBufferFS) > 0){
-		  LOG_CDC_FS(TRACE, CDCRxBufferFS);
+		  LOG_CDC_FS(TRACE, "%d %d", CDCRxBufferFS[0], CDCRxBufferFS[1]);
 		  if(strcmp(CDCRxBufferFS, "a")==0)
 		  	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
 		  if(strcmp(CDCRxBufferFS, "s")==0)
@@ -148,13 +146,13 @@ int main(void)
 	  }
 
 	  newtick = HAL_GetTick();
-	  if(oldtick + 50 < newtick){
-		  LOG_CDC_FS(INFO, "Interrupts from last %d ms: %d from TimM, %d from TimA, %d from TimB, %d from TIM16", newtick - oldtick, TimMInterrupts, TimAInterrupts, TimBInterrupts, Tim16Interrupts);
-		  LOG_CDC_FS(INFO, "status: %3d   Timers' CNTs: %d from TimM, %d from TimA, %d from TimB, %d from TIM16", 0, HRTIM1->sMasterRegs.MCNTR, HRTIM1->sTimerxRegs[3].CNTxR, HRTIM1->sTimerxRegs[4].CNTxR, TIM16->CNT);
-		  LOG_CDC_FS(INFO, "whatever: ", HRTIM1->sMasterRegs.MCMP1R);
+	  if(oldtick + 999 < newtick){
+		  LOG_CDC_FS(INFO, "Interrupts from last %d ms: %d rollovers, %d 1s, %d 0s", newtick - oldtick, TimMRollovers, TimMBit1s, TimMBit0s);
+		  PrepareFrame(1500, 1, ESC_0, THR_0);
+		  TimMRollovers = 0;
+		  TimMBit1s = 0;
+		  TimMBit0s = 0;
 		  oldtick = newtick;
-		  GPIOB->BSRR = ((1 << 7) << (16 * thing1));
-		  thing1 = !thing1;
 	  }
 	  /* Set and reset TD1 by software */
 
@@ -240,64 +238,70 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief TIM16 Initialization Function
+  * @brief HRTIM Initialization Function
   * @param None
   * @retval None
   */
-static void MX_TIM16_Init(void)
+static void MX_HRTIM_Init(void)
 {
 
-  /* USER CODE BEGIN TIM16_Init 0 */
+  /* USER CODE BEGIN HRTIM_Init 0 */
 
-  /* USER CODE END TIM16_Init 0 */
+  /* USER CODE END HRTIM_Init 0 */
 
-  TIM_OC_InitTypeDef sConfigOC = {0};
-  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
+  HRTIM_TimeBaseCfgTypeDef pTimeBaseCfg = {0};
+  HRTIM_TimerCfgTypeDef pTimerCfg = {0};
+  HRTIM_CompareCfgTypeDef pCompareCfg = {0};
 
-  /* USER CODE BEGIN TIM16_Init 1 */
+  /* USER CODE BEGIN HRTIM_Init 1 */
 
-  /* USER CODE END TIM16_Init 1 */
-  htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 120;
-  htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 15;
-  htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim16.Init.RepetitionCounter = 255;
-  htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-  if (HAL_TIM_Base_Init(&htim16) != HAL_OK)
+  /* USER CODE END HRTIM_Init 1 */
+  hhrtim.Instance = HRTIM1;
+  hhrtim.Init.HRTIMInterruptResquests = HRTIM_IT_NONE;
+  hhrtim.Init.SyncOptions = HRTIM_SYNCOPTION_NONE;
+  if (HAL_HRTIM_Init(&hhrtim) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_Init(&htim16) != HAL_OK)
+  pTimeBaseCfg.Period = 1332;
+  pTimeBaseCfg.RepetitionCounter = 0x00;
+  pTimeBaseCfg.PrescalerRatio = HRTIM_PRESCALERRATIO_DIV1;
+  pTimeBaseCfg.Mode = HRTIM_MODE_CONTINUOUS;
+  if (HAL_HRTIM_TimeBaseConfig(&hhrtim, HRTIM_TIMERINDEX_MASTER, &pTimeBaseCfg) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-  if (HAL_TIM_PWM_ConfigChannel(&htim16, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  pTimerCfg.InterruptRequests = HRTIM_MASTER_IT_MCMP1|HRTIM_MASTER_IT_MCMP2
+                              |HRTIM_MASTER_IT_MREP|HRTIM_MASTER_IT_MUPD;
+  pTimerCfg.DMARequests = HRTIM_MASTER_DMA_NONE;
+  pTimerCfg.DMASrcAddress = 0x0000;
+  pTimerCfg.DMADstAddress = 0x0000;
+  pTimerCfg.DMASize = 0x1;
+  pTimerCfg.HalfModeEnable = HRTIM_HALFMODE_DISABLED;
+  pTimerCfg.StartOnSync = HRTIM_SYNCSTART_DISABLED;
+  pTimerCfg.ResetOnSync = HRTIM_SYNCRESET_DISABLED;
+  pTimerCfg.DACSynchro = HRTIM_DACSYNC_NONE;
+  pTimerCfg.PreloadEnable = HRTIM_PRELOAD_DISABLED;
+  pTimerCfg.UpdateGating = HRTIM_UPDATEGATING_INDEPENDENT;
+  pTimerCfg.BurstMode = HRTIM_TIMERBURSTMODE_MAINTAINCLOCK;
+  pTimerCfg.RepetitionUpdate = HRTIM_UPDATEONREPETITION_DISABLED;
+  if (HAL_HRTIM_WaveformTimerConfig(&hhrtim, HRTIM_TIMERINDEX_MASTER, &pTimerCfg) != HAL_OK)
   {
     Error_Handler();
   }
-  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = 0;
-  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-  sBreakDeadTimeConfig.BreakFilter = 0;
-  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-  if (HAL_TIMEx_ConfigBreakDeadTime(&htim16, &sBreakDeadTimeConfig) != HAL_OK)
+  pCompareCfg.CompareValue = 500;
+  if (HAL_HRTIM_WaveformCompareConfig(&hhrtim, HRTIM_TIMERINDEX_MASTER, HRTIM_COMPAREUNIT_1, &pCompareCfg) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN TIM16_Init 2 */
+  pCompareCfg.CompareValue = 1000;
+  if (HAL_HRTIM_WaveformCompareConfig(&hhrtim, HRTIM_TIMERINDEX_MASTER, HRTIM_COMPAREUNIT_2, &pCompareCfg) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN HRTIM_Init 2 */
 
-  /* USER CODE END TIM16_Init 2 */
+  /* USER CODE END HRTIM_Init 2 */
 
 }
 
@@ -313,7 +317,9 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
@@ -330,15 +336,18 @@ static void MX_GPIO_Init(void)
                           |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB0 PB14 PB7 */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_14|GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /**/
+  HAL_I2CEx_EnableFastModePlus(SYSCFG_PMCR_I2C_PB7_FMP);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

@@ -1,6 +1,6 @@
-../Core/Src/main.c:89:5:main	56	static,ignoring_inline_asm
-../Core/Src/main.c:186:6:SystemClock_Config	120	static
-../Core/Src/main.c:247:13:MX_TIM16_Init	80	static
-../Core/Src/main.c:309:13:MX_GPIO_Init	40	static
-../Core/Src/main.c:348:6:InputHandler	4	static
-../Core/Src/main.c:357:6:Error_Handler	8	static,ignoring_inline_asm
+../Core/Src/main.c:90:5:main	40	static,ignoring_inline_asm
+../Core/Src/main.c:184:6:SystemClock_Config	120	static
+../Core/Src/main.c:245:13:MX_HRTIM_Init	120	static
+../Core/Src/main.c:313:13:MX_GPIO_Init	48	static
+../Core/Src/main.c:357:6:InputHandler	4	static
+../Core/Src/main.c:366:6:Error_Handler	8	static,ignoring_inline_asm

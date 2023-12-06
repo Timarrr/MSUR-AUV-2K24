@@ -77,51 +77,62 @@ void HAL_MspInit(void)
 }
 
 /**
-* @brief TIM_Base MSP Initialization
+* @brief HRTIM MSP Initialization
 * This function configures the hardware resources used in this example
-* @param htim_base: TIM_Base handle pointer
+* @param hhrtim: HRTIM handle pointer
 * @retval None
 */
-void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
+void HAL_HRTIM_MspInit(HRTIM_HandleTypeDef* hhrtim)
 {
-  if(htim_base->Instance==TIM16)
+  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+  if(hhrtim->Instance==HRTIM1)
   {
-  /* USER CODE BEGIN TIM16_MspInit 0 */
+  /* USER CODE BEGIN HRTIM1_MspInit 0 */
 
-  /* USER CODE END TIM16_MspInit 0 */
+  /* USER CODE END HRTIM1_MspInit 0 */
+
+  /** Initializes the peripherals clock
+  */
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_HRTIM1;
+    PeriphClkInitStruct.Hrtim1ClockSelection = RCC_HRTIM1CLK_CPUCLK;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
     /* Peripheral clock enable */
-    __HAL_RCC_TIM16_CLK_ENABLE();
-    /* TIM16 interrupt Init */
-    HAL_NVIC_SetPriority(TIM16_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(TIM16_IRQn);
-  /* USER CODE BEGIN TIM16_MspInit 1 */
+    __HAL_RCC_HRTIM1_CLK_ENABLE();
+    /* HRTIM1 interrupt Init */
+    HAL_NVIC_SetPriority(HRTIM1_Master_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(HRTIM1_Master_IRQn);
+  /* USER CODE BEGIN HRTIM1_MspInit 1 */
 
-  /* USER CODE END TIM16_MspInit 1 */
+  /* USER CODE END HRTIM1_MspInit 1 */
   }
 
 }
 
 /**
-* @brief TIM_Base MSP De-Initialization
+* @brief HRTIM MSP De-Initialization
 * This function freeze the hardware resources used in this example
-* @param htim_base: TIM_Base handle pointer
+* @param hhrtim: HRTIM handle pointer
 * @retval None
 */
-void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
+void HAL_HRTIM_MspDeInit(HRTIM_HandleTypeDef* hhrtim)
 {
-  if(htim_base->Instance==TIM16)
+  if(hhrtim->Instance==HRTIM1)
   {
-  /* USER CODE BEGIN TIM16_MspDeInit 0 */
+  /* USER CODE BEGIN HRTIM1_MspDeInit 0 */
 
-  /* USER CODE END TIM16_MspDeInit 0 */
+  /* USER CODE END HRTIM1_MspDeInit 0 */
     /* Peripheral clock disable */
-    __HAL_RCC_TIM16_CLK_DISABLE();
+    __HAL_RCC_HRTIM1_CLK_DISABLE();
 
-    /* TIM16 interrupt DeInit */
-    HAL_NVIC_DisableIRQ(TIM16_IRQn);
-  /* USER CODE BEGIN TIM16_MspDeInit 1 */
+    /* HRTIM1 interrupt DeInit */
+    HAL_NVIC_DisableIRQ(HRTIM1_Master_IRQn);
+  /* USER CODE BEGIN HRTIM1_MspDeInit 1 */
 
-  /* USER CODE END TIM16_MspDeInit 1 */
+  /* USER CODE END HRTIM1_MspDeInit 1 */
   }
 
 }

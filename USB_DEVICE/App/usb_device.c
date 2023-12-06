@@ -56,6 +56,8 @@ USBD_HandleTypeDef hUsbDeviceFS;
  * -- Insert your external function declaration here --
  */
 /* USER CODE BEGIN 1 */
+
+
 uint16_t CDC_OTG_Send(uint8_t *Buf, uint16_t Len){
 	  uint8_t result = USBD_OK;
 	  USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;

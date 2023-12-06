@@ -1,1 +1,5 @@
-../Core/Src/dshot600.c:9:6:SendFrame	2
+../Core/Src/dshot600.c:25:6:PrepareFrame	1
+../Core/Src/dshot600.c:33:6:SendFrame	2
+../Core/Src/dshot600.c:47:6:HAL_HRTIM_Compare1EventCallback	2
+../Core/Src/dshot600.c:57:6:HAL_HRTIM_Compare2EventCallback	2
+../Core/Src/dshot600.c:67:6:HAL_HRTIM_RepetitionEventCallback	4

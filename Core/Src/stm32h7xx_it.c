@@ -56,7 +56,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
-extern TIM_HandleTypeDef htim16;
+extern HRTIM_HandleTypeDef hhrtim;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -218,18 +218,17 @@ void OTG_FS_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM16 global interrupt.
+  * @brief This function handles HRTIM master timer global interrupt.
   */
-void TIM16_IRQHandler(void)
+void HRTIM1_Master_IRQHandler(void)
 {
-  /* USER CODE BEGIN TIM16_IRQn 0 */
+  /* USER CODE BEGIN HRTIM1_Master_IRQn 0 */
 
-  /* USER CODE END TIM16_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim16);
-  /* USER CODE BEGIN TIM16_IRQn 1 */
-  Tim16Interrupts++;
+  /* USER CODE END HRTIM1_Master_IRQn 0 */
+  HAL_HRTIM_IRQHandler(&hhrtim,HRTIM_TIMERINDEX_MASTER);
+  /* USER CODE BEGIN HRTIM1_Master_IRQn 1 */
 
-  /* USER CODE END TIM16_IRQn 1 */
+  /* USER CODE END HRTIM1_Master_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

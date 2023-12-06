@@ -31,6 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "dshot600.h"
 
 /* USER CODE END Includes */
 
@@ -51,13 +52,13 @@ extern uint8_t CDCRxBufferFS[FS_RX_DATA_SIZE];
 /** Data to send over USB CDC are stored in this buffer   */
 extern uint8_t CDCTxBufferFS[FS_TX_DATA_SIZE];
 
-extern uint16_t TimAInterrupts;
+extern uint32_t TimMRollovers;
 
-extern uint16_t TimBInterrupts;
+extern uint32_t TimMBit1s;
 
-extern uint16_t TimMInterrupts;
+extern uint32_t TimMBit0s;
 
-extern uint16_t Tim16Interrupts;
+extern uint32_t Tim16Interrupts;
 
 /* USER CODE END EC */
 
